@@ -1,5 +1,6 @@
 package com.flwr.admin.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -54,6 +55,7 @@ public class User {
   private String address2;
 
   @Column(nullable = false)
+  @JsonFormat(pattern = "yyyy-MM-dd")
   private LocalDate birthday;
 
   @Enumerated(EnumType.STRING)
@@ -69,10 +71,12 @@ public class User {
   private UserRole role = UserRole.USER;
 
   @LastModifiedDate
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
   @CreatedDate
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
 

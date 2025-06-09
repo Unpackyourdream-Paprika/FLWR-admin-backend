@@ -1,5 +1,8 @@
 package com.flwr.admin.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.flwr.admin.global.jwt.JwtProvider;
 import com.flwr.admin.user.domain.User;
 import com.flwr.admin.user.dto.LoginRequest;
@@ -29,22 +32,22 @@ public class AuthService {
     System.out.println("PWD: " + encodedPassword);
 
     User user = User.builder()
-        .email(request.getEmail())
-        .password(encodedPassword)
-        .firstName(request.getFirstName())
-        .firstNameKana(request.getFirstNameKana())
-        .lastName(request.getLastName())
-        .lastNameKana(request.getLastNameKana())
-        .phone(request.getPhone())
-        .postalCode(request.getPostalCode())
-        .prefecture(request.getPrefecture())
-        .address1(request.getAddress1())
-        .address2(request.getAddress2())
-        .birthday(request.getBirthday())
-        .gender(request.getGender())
-        .acceptTerms(request.isAcceptTerms())
-        .role(User.UserRole.USER)
-        .build();
+            .email(request.getEmail())
+            .password(encodedPassword)
+            .firstName(request.getFirstName())
+            .firstNameKana(request.getFirstNameKana())
+            .lastName(request.getLastName())
+            .lastNameKana(request.getLastNameKana())
+            .phone(request.getPhone())
+            .postalCode(request.getPostalCode())
+            .prefecture(request.getPrefecture())
+            .address1(request.getAddress1())
+            .address2(request.getAddress2())
+            .birthday(request.getBirthday())
+            .gender(request.getGender())
+            .acceptTerms(request.isAcceptTerms())
+            .role(User.UserRole.USER)
+            .build();
 
     userRepository.save(user);
     System.out.println("USER: " + user);
@@ -56,10 +59,20 @@ public class AuthService {
 
   public LoginResponse login(LoginRequest request) {
     User user = userRepository.findByEmail(request.getEmail())
-        .orElseThrow(() -> new IllegalArgumentException("Not exist user"));
+            .orElseThrow(() -> new IllegalArgumentException("Not exist user"));
 
     if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
       throw new IllegalArgumentException("Password not correct");
+    }
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.registerModule(new JavaTimeModule());
+    String userJson = null;
+    try {
+      userJson = objectMapper.writeValueAsString(user);
+      System.out.println("user: "+userJson);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
 
     String accessToken = jwtProvider.createToken(user.getId().toString());
