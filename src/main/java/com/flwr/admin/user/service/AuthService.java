@@ -74,7 +74,7 @@ public class AuthService {
       String json = objectMapper.writeValueAsString(user);
       System.out.println(json);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException("JSON 직렬화 실패", e);
+      throw new RuntimeException("Object Mapper Error: ", e);
     }
 
     String accessToken = jwtProvider.createToken(user.getId().toString());
