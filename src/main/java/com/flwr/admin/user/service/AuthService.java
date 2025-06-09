@@ -65,12 +65,16 @@ public class AuthService {
       throw new IllegalArgumentException("Password not correct");
     }
 
+    if (user.getRole() != User.UserRole.ADMIN) {
+      throw new IllegalArgumentException("Invalid Access.");
+    }
+
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
     String userJson = null;
     try {
       userJson = objectMapper.writeValueAsString(user);
-      System.out.println("user: "+userJson);
+      System.out.println("user: " + userJson);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
