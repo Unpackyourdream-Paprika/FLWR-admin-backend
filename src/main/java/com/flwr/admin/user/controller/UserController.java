@@ -1,5 +1,6 @@
 package com.flwr.admin.user.controller;
 
+import com.flwr.admin.user.domain.User;
 import com.flwr.admin.user.dto.UserResponse;
 import com.flwr.admin.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class UserController {
 
   @GetMapping("/me")
   public ResponseEntity<UserResponse> getMyInfo(Authentication authentication) {
-    UserResponse user = (UserResponse) authentication.getPrincipal();
+    User user = (User) authentication.getPrincipal();
 
-    return ResponseEntity.ok(user);
+    return ResponseEntity.ok(UserResponse.of(user));
   }
 }

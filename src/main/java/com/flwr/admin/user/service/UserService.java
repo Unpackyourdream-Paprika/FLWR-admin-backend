@@ -1,7 +1,6 @@
 package com.flwr.admin.user.service;
 
 import com.flwr.admin.user.domain.User;
-import com.flwr.admin.user.dto.UserResponse;
 import com.flwr.admin.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +14,11 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public UserResponse getUserInfoById(Long userId) {
-    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not exist"));
-
-    return UserResponse.builder().email(user.getEmail()).build();
+  public User getUserInfoById(Long userId) {
+    return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not exist"));
   }
 
-  public UserResponse getUserInfoByEmail(String email) {
-    User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not exist"));
-
-    return UserResponse.builder().email(user.getEmail()).build();
+  public User getUserInfoByEmail(String email) {
+    return userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not exist"));
   }
 }

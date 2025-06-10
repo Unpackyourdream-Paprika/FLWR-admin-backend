@@ -1,7 +1,7 @@
 package com.flwr.admin.global.filter;
 
 import com.flwr.admin.global.jwt.JwtProvider;
-import com.flwr.admin.user.dto.UserResponse;
+import com.flwr.admin.user.domain.User;
 import com.flwr.admin.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,14 +35,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     if (token != null && jwtProvider.validateToken(token)) {
       String userIdStr = jwtProvider.getUserId(token);
 
-      long userId = 0;
+      long userId;
       try {
         userId = Long.parseLong(userIdStr);
       } catch (NumberFormatException e) {
         throw new IllegalArgumentException(e.getMessage());
       }
 
-      UserResponse user = userService.getUserInfoById(userId);
+      User user = userService.getUserInfoById(userId);
 
       UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null,
               Collections.emptyList());
